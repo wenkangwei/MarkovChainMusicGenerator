@@ -330,10 +330,10 @@ def generate_RewardMatrix(Psa, max_reward=10.0, mode = "stationary", state_set =
     """
 
     Reward = np.mat(Psa.dot(max_reward))
-    if mode == "stationary":
+    if mode.lower() == "stationary":
         # Reward += np.mat(np.ones(np.shape(Psa))) * (1/len(Psa))
         pass
-    elif mode == "kalman":
+    elif mode.lower() == "update":
         if np.shape(updated_Psa) != np.shape(Psa):
             raise  ValueError("Two Psa matrix must be in the same shape! Psa:",Psa.shape,"new Psa:",np.shape(updated_Psa))
         else:

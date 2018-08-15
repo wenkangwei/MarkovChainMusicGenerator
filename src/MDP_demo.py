@@ -350,7 +350,7 @@ def make_MusicSyllable_Online(state_set =None, action_set= None, process=None,so
         new_Psa = generate_ProbMatrix(state_set=state_set,action_set=action_set,process=song)
         print(" Psa updated")
         #update reward matrix
-        new_reward = generate_RewardMatrix(Psa=Psa,max_reward=max_reward,mode="kalman",state_set=state_set,action_set=action_set,updated_Psa=new_Psa)
+        new_reward = generate_RewardMatrix(Psa=Psa,max_reward=max_reward,mode="update",state_set=state_set,action_set=action_set,updated_Psa=new_Psa)
         mdp_obj.reward =new_reward
 
         #Consider whether changing the max reward will do better
@@ -361,7 +361,7 @@ def make_MusicSyllable_Online(state_set =None, action_set= None, process=None,so
 
     return song[-201:-1]
 
-def MDP_Demo1(song =0):
+def MDP_Demo1(song =0, dir=""):
     """
     Demo 1:
     it considers that a state has 2 state variables: pitch and duration and trains a mdp model to learn how to play
@@ -416,11 +416,11 @@ def MDP_Demo1(song =0):
 
     print("Song Policy:",song_mdp.policy_mat)
     for i, syllable in enumerate(syllable_ls):
-        make_wav(syllable,fn= "syllable_{}.wav".format(i))
+        make_wav(syllable,fn=dir+"syllable_{}.wav".format(i))
 
     make_wav(song,fn= "Demo1_Song.wav")
 
-def MDP_Demo2(song= 0):
+def MDP_Demo2(song= 0,dir =""):
     """
     Demo 2:
     It generates a sequence of music by using 2 mdp model to create pitch list and duration list individually
@@ -440,13 +440,13 @@ def MDP_Demo2(song= 0):
     print("Song:",Song)
 
     # write song to file
-    make_wav(Song, fn = "Demo2_Song.wav")
+    make_wav(Song, fn = dir+"Demo2_Song.wav")
 
     pass
 
 
 
-def MDP_Demo3(song = 0):
+def MDP_Demo3(song = 0, dir=""):
     """
     Using one MDP model to generate songs online whlie MDP is being trained
     Parameters:
@@ -462,7 +462,7 @@ def MDP_Demo3(song = 0):
     Song = make_MusicSyllable_Online(state_set=state_set,action_set=action_set,process=data_seq, song_len=200, syllable_len =5)
     print("Song:",Song)
     # write song to file
-    make_wav(Song, fn ="Demo3_Song{}.wav".format(song))
+    make_wav(Song, fn =dir+"Demo3_Song{}.wav".format(song))
 
     pass
 
@@ -475,14 +475,15 @@ if __name__ == "__main__":
 
     # using one MDP model to make song, in which the state set and action set are lists
     # and each state and each action have the form of [pitch, duration]
-    MDP_Demo1(3)
+    dir = "../songs/"
+    MDP_Demo1(3,dir)
 
 
     # Using 2 MDP models to make song, in which pitch states and duration states are separared
-    MDP_Demo2(3)
+    MDP_Demo2(3,dir)
 
     # Using a MDP model to generate songs online, which means it trains the MDP using the song pieces the
     # MDP've already generated while MDP is generating song pieces.
     for i in range(3,7):
-        MDP_Demo3(i)
+        MDP_Demo3(i,dir)
     pass
